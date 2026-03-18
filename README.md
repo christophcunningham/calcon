@@ -2,6 +2,8 @@
 
 A Sumlock-style running total calculator with memory recall chips. A dual scroll-wheel unit converter and fraction-aware calculator — built for people who work with various measurements every day. Designed with a bit of a 90s aesthetic, with a hope to bring a fun and tactile way to input measurements
 
+App here: https://calcon.pages.dev/
+
 ---
 
 ## Features
@@ -65,8 +67,8 @@ A Sumlock-style running total calculator with memory recall chips. A dual scroll
 Calc\*on is a single `.html` file. Drop it anywhere — Cloudflare Pages, Netlify, or just open it locally in a browser. No build step required.
 
 ```
-# Cloudflare Pages
-# Point your build output to the folder containing calcon-v1.3.html
+# Hosted
+https://calcon.pages.dev/
 ```
 
 ---
