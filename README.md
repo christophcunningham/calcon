@@ -1,8 +1,20 @@
-# Calc\*on
+# CALC\*ON
 
-A Sumlock-style running total calculator with memory recall chips. A dual scroll-wheel unit converter and fraction-aware calculator — built for people who work with various measurements every day. Designed with a bit of a 90s aesthetic, with a hope to bring a fun and tactile way to input measurements
+Built for people who make things. A Sumlock-style running total calculator with fraction input and memory recall. The converter runs on two scroll wheels — tactile and intuitive on mobile, with hotkeys and keyboard input for desktop.
 
-App here: https://calcon.pages.dev/
+---
+
+<p align="center">
+  <img src="assets/calc-dark.PNG" width="30%" />
+  <img src="assets/calc-light.PNG" width="30%" />
+</p>
+
+<p align="center">
+  <img src="assets/length.PNG" width="22%" />
+  <img src="assets/pixels.PNG" width="22%" />
+  <img src="assets/vol-weight.PNG" width="22%" />
+  <img src="assets/temp.PNG" width="22%" />
+</p>
 
 ---
 
@@ -11,7 +23,7 @@ App here: https://calcon.pages.dev/
 **Converter**
 - **Length** — inches ↔ centimeters, with fraction, half, and feet sub-info
 - **Pixels** — inches or cm ↔ pixels at adjustable PPI (72–600)
-- **Vol/Mass** — oz/lb ↔ ml/kg, with tablespoon, cup, pint, quart, gallon, and metric equivalents
+- **Vol/Weight** — oz/lb ↔ ml/kg, with tablespoon, cup, pint, quart, gallon, and metric equivalents
 - **Temp** — °F ↔ °C, with air, reference, and cook presets
 
 **Calculator**
@@ -53,7 +65,7 @@ App here: https://calcon.pages.dev/
 | `X` or `*` | Multiply |
 | `/` | Divide |
 | `Enter` | Equals |
-| `Backspace` | Delete last digit |
+| `Backspace` or `Delete` | Delete last digit |
 | `Z` | Clear everything |
 | `%` | Percent |
 | `M` | Set Metric → switch to converter |
@@ -62,14 +74,16 @@ App here: https://calcon.pages.dev/
 
 ---
 
-## Deployment
+## Add to iPhone Home Screen
 
-Calc\*on is a single `.html` file. Drop it anywhere — Cloudflare Pages, Netlify, or just open it locally in a browser. No build step required.
+One of the best ways to use Calc\*on is straight from your iPhone home screen. It eliminates the browser UI entirely — no address bar, no tabs — and just gives you the app full screen, exactly as it was designed to be used.
 
-```
-# Hosted
-https://calcon.pages.dev/
-```
+1. Open Calc\*on in **Safari** on your iPhone
+2. Tap the **Share** button (the box with the arrow pointing up) at the bottom of the screen
+3. Scroll down and tap **"Add to Home Screen"**
+4. Give it a name and tap **Add**
+
+It'll sit on your home screen like any other app. Great for quick lookups on the job.
 
 ---
 

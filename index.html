@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Calc*on</title>
-<link rel="apple-touch-icon" href="icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
@@ -18,7 +17,7 @@
      light — #ffffff bg, black text
   ═══════════════════════════════════════════════════════ */
 
-
+  
   :root {
     --bg:       #2a2a30;
     --surface:  #141414;
@@ -76,7 +75,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 20px;
-    z-index: 100;
+    z-index: 350;
     background: var(--bg);
   }
 
@@ -99,6 +98,8 @@
     height: 15px;
     border-radius: 50%;
     cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
     border: 2px solid transparent;
     transition: transform 0.15s, border-color 0.15s;
     -webkit-tap-highlight-color: transparent;
@@ -329,7 +330,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 4px;
+    margin-bottom: 12px;
     flex-shrink: 0;
   }
 
@@ -339,6 +340,8 @@
     height: 160px;
     cursor: grab;
     touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
     flex-shrink: 0;
     position: relative;
   }
@@ -382,6 +385,7 @@
   }
 
   .value-main.flash { color: var(--accent); }
+  .ppi-val.flash { color: var(--accent); }
 
   .value-sub, .value-half, .value-extra { display: none; } /* legacy — replaced by info-block */
 
@@ -525,7 +529,8 @@
   }
 
   .eq-symbol {
-    font-size: 14px;
+    font-size: 20px;
+    font-weight: 700;
     color: var(--dim);
     letter-spacing: 0.05em;
   }
@@ -667,7 +672,7 @@
     color: var(--bg);
     border: none;
     cursor: pointer;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     font-size: 22px;
@@ -677,6 +682,7 @@
     transition: transform 0.12s;
     -webkit-tap-highlight-color: transparent;
   }
+  .calc-back-fab.open { display: flex; }
   .calc-back-fab:active { transform: translateX(-50%) scale(0.91); }
 
 
@@ -812,7 +818,9 @@
     justify-content: center;
     transition: background 0.08s, transform 0.06s, color 0.08s;
     -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
     user-select: none;
+    touch-action: manipulation;
     width: 100%;
     padding: 0;
   }
@@ -914,15 +922,15 @@
   <div class="top-bar">
     <span class="app-name">Calc<span style="opacity:0.45">*</span>on</span>
     <div class="theme-dots">
-      <div class="theme-dot active" data-theme="light" title="Light" tabindex="-1"></div>
-        <div class="theme-dot" data-theme="dark" title="Dark" tabindex="-1"></div>
+      <div class="theme-dot" data-theme="light" title="Light" tabindex="-1"></div>
+        <div class="theme-dot active" data-theme="dark" title="Dark" tabindex="-1"></div>
     </div>
   </div>
 
   <div class="mode-bar">
     <button class="mode-btn active" id="btnLength">LENGTH</button>
     <button class="mode-btn" id="btnPixel">PIXELS</button>
-    <button class="mode-btn" id="btnLiquid">VOL/MASS</button>
+    <button class="mode-btn" id="btnLiquid">VOL/WEIGHT</button>
     <button class="mode-btn" id="btnTemp">TEMP</button>
   </div>
 
@@ -983,10 +991,10 @@
 
     <!-- CENTER -->
     <div class="center-col">
-      <div class="eq-line"></div>
+      <div class="eq-line" style="height: 36px; margin-top: 25px;"></div>
       <div class="eq-symbol">=</div>
       <button class="zero-btn" id="btnZero">ZERO</button>
-      <div class="eq-line"></div>
+      <div class="eq-line" style="margin-top: 8px;"></div>
     </div>
 
     <!-- RIGHT WHEEL -->
@@ -1093,14 +1101,11 @@
 
 </div>
 <!-- Calc page -->
-    <div class="theme-dot" data-theme="dark" title="Dark" tabindex="-1"></div>
-  </div>
-</div>
 <div class="top-bar" id="calcTopBar">
     <span class="app-name" style="visibility:hidden">Calc<span style="opacity:0.45">*</span>on</span>
     <div class="theme-dots">
-      <div class="theme-dot active" data-theme="light" title="Light" tabindex="-1"></div>
-      <div class="theme-dot" data-theme="dark" title="Dark" tabindex="-1"></div>
+      <div class="theme-dot" data-theme="light" title="Light" tabindex="-1"></div>
+      <div class="theme-dot active" data-theme="dark" title="Dark" tabindex="-1"></div>
     </div>
   </div>
 <div class="calc-page" id="calcPage">
@@ -1214,7 +1219,7 @@
     length: {
       leftLabel:  'inches',
       rightLabel: 'centimeters',
-      left:  { min: 0, max: 400,   step: 1/16, fmt: v => v.toFixed(4) + '"',                    sub: v => inFracStr(v) },
+      left:  { min: 0, max: 1000,  step: 1/16, fmt: v => v.toFixed(4) + '"',                    sub: v => inFracStr(v) },
       right: { min: 0, max: 1016, step: 0.1,  fmt: v => v.toFixed(2) + ' cm',                  sub: () => '' },
       toRight: v => v * 2.54,
       toLeft:  v => v / 2.54,
@@ -1225,7 +1230,7 @@
       rightLabel: 'pixels',
       get left() {
         return pxUnit === 'in'
-          ? { min: 0, max: 400,   step: 1,   fmt: v => v.toFixed(2) + '"',       sub: v => inFracStr(Math.round(v * 16) / 16) }
+          ? { min: 0, max: 1000,  step: 1,   fmt: v => v.toFixed(2) + '"',       sub: v => inFracStr(Math.round(v * 16) / 16) }
           : { min: 0, max: 1016, step: 1,    fmt: v => v.toFixed(1) + ' cm',     sub: () => '' };
       },
       right: { min: 0, max: 60000, step: 1, fmt: v => Math.round(v).toLocaleString() + ' px', sub: () => '' },
@@ -1366,13 +1371,23 @@
       window.addEventListener('mousemove', mm);
       window.addEventListener('mouseup', mu, {once: true});
     });
+    let wheelVel = 0;
     containerEl.addEventListener('wheel', e => {
       e.preventDefault();
       cancelAnimationFrame(rafId);
-      const steps = e.deltaY > 0 ? -1 : 1;
-      ridgeOff -= steps * RS;
-      if (wheel.onSteps) wheel.onSteps(-steps, 0);
-      updateRidges();
+      const delta = e.deltaY * (e.deltaMode === 1 ? 20 : e.deltaMode === 2 ? 400 : 1);
+      wheelVel -= delta * 0.015;
+      (function glide() {
+        if (Math.abs(wheelVel) < 0.05) { wheelVel = 0; return; }
+        const dy = wheelVel * wheel.sensitivity;
+        ridgeOff += dy; subpx += dy;
+        const steps = Math.trunc(subpx / RS);
+        subpx -= steps * RS;
+        if (steps !== 0 && wheel.onSteps) wheel.onSteps(steps, Math.abs(wheelVel));
+        updateRidges();
+        wheelVel *= 0.78;
+        rafId = requestAnimationFrame(glide);
+      })();
     }, {passive: false});
 
     updateRidges();
@@ -1400,6 +1415,7 @@
   /* ══ STATE ═════════════════════════════════════════════ */
   let leftVal  = 0;
   let rightVal = 0;
+  let kbBuf = ''; // keyboard input buffer for left wheel
 
   function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
   function snapTo(v, step) { return Math.round(v / step) * step; }
@@ -1604,41 +1620,39 @@
 
   /* ══ QUICK BUTTONS ═════════════════════════════════════ */
   function makeLongPress(el, fn) {
-    let timeout, interval;
-    let speed = 300; // ms between repeats, starts slow
-    let speedTimer;
+    let rafId = null, holdStart = null, lastFire = null;
+    let holding = false;
 
-    const startRepeat = () => {
-      clearInterval(interval);
-      interval = setInterval(() => {
+    const INITIAL_DELAY = 400;  // ms before repeat starts
+    const INITIAL_SPEED = 120;  // ms between repeats initially
+    const MIN_SPEED     = 40;   // ms floor
+
+    function loop(now) {
+      if (!holding) return;
+      const elapsed = now - holdStart;
+      if (elapsed < INITIAL_DELAY) { rafId = requestAnimationFrame(loop); return; }
+      // Accelerate: interpolate from INITIAL_SPEED to MIN_SPEED over 1.5s of hold
+      const t = Math.min(1, (elapsed - INITIAL_DELAY) / 1500);
+      const speed = INITIAL_SPEED - t * (INITIAL_SPEED - MIN_SPEED);
+      if (lastFire === null || now - lastFire >= speed) {
         haptic(4);
         fn();
-      }, speed);
-    };
-
-    const accelerate = () => {
-      speed = Math.max(40, speed - 40); // floor at 40ms
-      clearInterval(interval);
-      interval = setInterval(fn, speed);
-      speedTimer = setTimeout(accelerate, 600);
-    };
+        lastFire = now;
+      }
+      rafId = requestAnimationFrame(loop);
+    }
 
     const start = (e) => {
       if (e && e.preventDefault) e.preventDefault();
+      holding = true; holdStart = performance.now(); lastFire = null;
       haptic(8);
-      speed = 300;
       fn();
-      timeout = setTimeout(() => {
-        startRepeat();
-        speedTimer = setTimeout(accelerate, 600);
-      }, 400);
+      rafId = requestAnimationFrame(loop);
     };
 
     const stop = () => {
-      clearTimeout(timeout);
-      clearTimeout(speedTimer);
-      clearInterval(interval);
-      speed = 300;
+      holding = false;
+      cancelAnimationFrame(rafId);
     };
 
     el.addEventListener('mousedown',  start);
@@ -1646,6 +1660,7 @@
     el.addEventListener('mouseup',    stop);
     el.addEventListener('mouseleave', stop);
     el.addEventListener('touchend',   stop);
+    el.addEventListener('touchcancel',stop);
   }
 
   function leftBtnDelta() {
@@ -1677,12 +1692,16 @@
   });
   makeLongPress(document.getElementById('btnRightMinus'), () => wR.onSteps(1,  -1));
   makeLongPress(document.getElementById('btnRightPlus'),  () => wR.onSteps(-1, -1));
-  document.getElementById('btnZero').addEventListener('click', () => {
+  function doZero() {
     const zero = mode === MODES.temp ? 32 : 0;
+    kbBuf = '0';
     setFromLeft(zero, 0, false);
     wL.nudgeRidges(0);
     wR.nudgeRidges(0);
-  });
+  }
+  const btnZeroEl = document.getElementById('btnZero');
+  btnZeroEl.addEventListener('touchend', e => { e.preventDefault(); doZero(); }, {passive: false});
+  btnZeroEl.addEventListener('click', doZero);
 
   /* ══ PPI CONTROLS ══════════════════════════════════════ */
   const ppiRow   = document.getElementById('ppiRow');
@@ -1692,20 +1711,62 @@
   function setPpi(v) {
     ppi = Math.max(1, Math.min(2400, v));
     ppiValEl.textContent = ppi;
+    flash(ppiValEl);
     if (mode === MODES.pixel) setFromLeft(leftVal, 0, false);
   }
 
-  document.getElementById('ppiMinus').addEventListener('click', () => {
-    const prev = PPI_PRESETS.filter(p => p < ppi).pop();
-    setPpi(prev !== undefined ? prev : ppi - 1);
-  });
-  document.getElementById('ppiPlus').addEventListener('click', () => {
-    const next = PPI_PRESETS.find(p => p > ppi);
-    setPpi(next !== undefined ? next : ppi + 1);
-  });
+  // PPI: tap jumps to next preset, hold steps by 1
+  let ppiHolding = false;
+  function makePpiPress(el, tapFn, holdFn) {
+    let rafId = null, holdStart = null, lastFire = null;
+    let holding = false;
 
-  makeLongPress(document.getElementById('ppiMinus'), () => setPpi(ppi - 1));
-  makeLongPress(document.getElementById('ppiPlus'),  () => setPpi(ppi + 1));
+    function loop(now) {
+      if (!holding) return;
+      const elapsed = now - holdStart;
+      if (elapsed < 400) { rafId = requestAnimationFrame(loop); return; }
+      const t = Math.min(1, (elapsed - 400) / 1500);
+      const speed = 120 - t * (120 - 40);
+      if (lastFire === null || now - lastFire >= speed) {
+        haptic(4);
+        holdFn();
+        lastFire = now;
+        ppiHolding = true;
+      }
+      rafId = requestAnimationFrame(loop);
+    }
+
+    const start = (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      ppiHolding = false;
+      holding = true; holdStart = performance.now(); lastFire = null;
+      haptic(8);
+      rafId = requestAnimationFrame(loop);
+    };
+    const stop = () => {
+      holding = false;
+      cancelAnimationFrame(rafId);
+      if (!ppiHolding) tapFn();
+      ppiHolding = false;
+    };
+
+    const mouseStop = () => stop();
+    el.addEventListener('mousedown',  e => { start(e); window.addEventListener('mouseup', mouseStop, {once: true}); });
+    el.addEventListener('touchstart', start, {passive: true});
+    el.addEventListener('touchend',   stop);
+    el.addEventListener('touchcancel',stop);
+  }
+
+  makePpiPress(
+    document.getElementById('ppiMinus'),
+    () => { const prev = PPI_PRESETS.filter(p => p < ppi).pop(); setPpi(prev !== undefined ? prev : ppi - 1); },
+    () => setPpi(ppi - 1)
+  );
+  makePpiPress(
+    document.getElementById('ppiPlus'),
+    () => { const next = PPI_PRESETS.find(p => p > ppi); setPpi(next !== undefined ? next : ppi + 1); },
+    () => setPpi(ppi + 1)
+  );
 
   /* ══ PIXEL UNIT TOGGLE (IN / CM) ══════════════════════ */
   const btnPxIn = document.getElementById('btnPxIn');
@@ -1996,6 +2057,7 @@
   calcFab.addEventListener('click', () => {
     calcPage.classList.add('open');
     document.getElementById('calcTopBar').classList.add('open');
+    calcBackBtn.classList.add('open');
     cRender();
     requestAnimationFrame(drawFracTicks);
   });
@@ -2009,23 +2071,23 @@
     btn.addEventListener('click', () => cPressOp(btn.dataset.op));
   });
   document.getElementById('ckEquals').addEventListener('click', cPressEquals);
-  document.getElementById('ckBack').addEventListener('click', () => {
+  function doBackspace() {
     if (cBuf.length > 0) {
       cBuf = cBuf.slice(0, -1);
       cWhole = parseFloat(cBuf) || 0;
       cFracVal = 0; cFracNum = 0;
       updateFracThumb();
     } else if (cPending) {
-      // Nothing typed yet after op — cancel the operator
       const prev = cPending.val;
       cPending = null;
       cBuf = Number.isInteger(prev) ? prev.toString() : parseFloat(prev.toFixed(6)).toString();
       cWhole = parseFloat(cBuf) || 0;
-      // Trim last op from expression string
       cExprStr = cExprStr.replace(/\s*[\+\-\×\÷]\s*$/, '').trim();
     }
     cRender();
-  });
+  }
+  makeLongPress(document.getElementById('ckBack'), doBackspace);
+  document.getElementById('ckSign').addEventListener('touchend', e => { e.preventDefault(); if (!cBuf || cBuf === '0') return; cBuf = cBuf.startsWith('-') ? cBuf.slice(1) : '-' + cBuf; cWhole = parseFloat(cBuf) || 0; cRender(); }, {passive: false});
   document.getElementById('ckSign').addEventListener('click', () => {
     if (!cBuf || cBuf === '0') return;
     cBuf = cBuf.startsWith('-') ? cBuf.slice(1) : '-' + cBuf;
@@ -2043,6 +2105,7 @@
     const val = cEval();
     calcPage.classList.remove('open');
     document.getElementById('calcTopBar').classList.remove('open');
+    calcBackBtn.classList.remove('open');
     applyMode(MODES.length, document.getElementById('btnLength'));
     setFromLeft(val, 0, false);
     wL.nudgeRidges(0); wR.nudgeRidges(0);
@@ -2051,6 +2114,7 @@
     const val = cEval();
     calcPage.classList.remove('open');
     document.getElementById('calcTopBar').classList.remove('open');
+    calcBackBtn.classList.remove('open');
     applyMode(MODES.length, document.getElementById('btnLength'));
     setFromRight(val, 0, false);
     wL.nudgeRidges(0); wR.nudgeRidges(0);
@@ -2139,6 +2203,10 @@
   }
 
   document.querySelectorAll('.theme-dot').forEach(dot => {
+    dot.addEventListener('touchend', e => {
+      e.preventDefault();
+      setTheme(dot.dataset.theme);
+    }, {passive: false});
     dot.addEventListener('click', () => setTheme(dot.dataset.theme));
   });
 
@@ -2164,9 +2232,11 @@
       if (calcOpen) {
         calcPage.classList.remove('open');
     document.getElementById('calcTopBar').classList.remove('open');
+    calcBackBtn.classList.remove('open');
       } else {
         calcPage.classList.add('open');
     document.getElementById('calcTopBar').classList.add('open');
+    calcBackBtn.classList.add('open');
         drawFracTicks();
       }
       return;
@@ -2187,21 +2257,19 @@
         return;
       }
       if (e.key === 'z' || e.key === 'Z') {
-        document.getElementById('btnZero').click();
+        doZero();
         return;
       }
-      // Number keys → left wheel
+      // Number keys → left wheel (use string buffer)
       if (/^[0-9]$/.test(e.key)) {
-        const digit = e.key;
-        const current = leftVal.toFixed(4).replace(/\.?0+$/, '');
-        const newStr = current === '0' ? digit : current + digit;
-        const newVal = parseFloat(newStr);
-        if (!isNaN(newVal)) setFromLeft(newVal, 0, true);
+        kbBuf = kbBuf === '0' || kbBuf === '' ? e.key : kbBuf + e.key;
+        const newVal = parseFloat(kbBuf) || 0;
+        setFromLeft(newVal, 0, true);
         return;
       }
       if (e.key === 'Backspace') {
-        const s = leftVal.toString();
-        const newVal = parseFloat(s.slice(0, -1)) || 0;
+        kbBuf = kbBuf.slice(0, -1) || '0';
+        const newVal = parseFloat(kbBuf) || 0;
         setFromLeft(newVal, 0, true);
         return;
       }
@@ -2224,7 +2292,7 @@
       'x':'×', '*':'×',
       '/':'÷',
       'Enter':'=', 'Return':'=',
-      'Backspace':'⌫',
+      'Backspace':'⌫', 'Delete':'⌫',
       '%':'%',
       'm':'m', 'i':'i', 'z':'z', 'Z':'z',
     };
@@ -2233,7 +2301,7 @@
     if (!mapped) return;
     e.preventDefault();
 
-    if (mapped === '⌫') { document.getElementById('ckBack').click(); return; }
+    if (mapped === '⌫') { doBackspace(); return; }
     if (mapped === 'z') { cBuf = ''; cWhole = 0; cPending = null; cExprStr = ''; cFracVal = 0; cFracNum = 0; updateFracThumb(); cRender(); return; }
     if (mapped === '=') { document.getElementById('ckEquals').click(); return; }
     if (mapped === '%') { document.getElementById('ckPct').click(); return; }
@@ -2250,11 +2318,13 @@
 
 
   /* ══ INIT ═══════════════════════════════════════════════ */
+  setTheme('dark');
   applyMode(MODES.length, btnLength);
 
   // Start on calculator page
   calcPage.classList.add('open');
   document.getElementById('calcTopBar').classList.add('open');
+  calcBackBtn.classList.add('open');
   cRender();
   // Draw fraction ticks after layout settles
   requestAnimationFrame(() => requestAnimationFrame(drawFracTicks));
