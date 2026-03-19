@@ -1,6 +1,6 @@
 # CALC\*ON
 
-Built for people who make things. A Sumlock-style running total calculator with fraction input and memory recall. The converter runs on two scroll wheels — tactile and intuitive on mobile, with hotkeys and keyboard input for desktop.
+A Sumlock-style running total calculator with fraction input and memory recall. The converter runs on two scroll wheels — tactile and intuitive on mobile, with hotkeys and keyboard input for desktop.
 
 ---
 
